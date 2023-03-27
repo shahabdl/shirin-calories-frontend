@@ -194,10 +194,12 @@ const SearchIngred = (props) => {
             <SvgIcon
               icon="closeIcon"
               className="fill-text dark:fill-text-dark"
+              width="20"
+              height="20"
             />
           </button>
           <div className="w-[20px] h-[20px] absolute top-[50%] translate-y-[-45%] left-[7px] fill-text dark:fill-text-dark">
-            <SvgIcon icon="searchIcon" />
+            <SvgIcon icon="searchIcon" width="20" height="20"/>
           </div>
         </div>
       </div>
