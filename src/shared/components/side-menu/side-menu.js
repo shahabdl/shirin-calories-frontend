@@ -30,10 +30,10 @@ const SideMenu = (props) => {
           <h1
             className={
               (wideMenu ? "max-w-[100%]" : "max-w-0") +
-              " text-text dark:text-text-dark w-[200px] overflow-hidden transition-[max-width] delay-200 duration-300"
+              " text-text dark:text-text-dark w-[200px] overflow-hidden transition-[max-width] delay-200 duration-300 whitespace-nowrap"
             }
           >
-            Calc
+            Shirin Calories
           </h1>
         </NavLink>
 
