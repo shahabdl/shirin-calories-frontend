@@ -2,6 +2,10 @@ import { rest } from 'msw';
 
 export const handlers = [
     rest.get("http://localhost/api/ingredients/", (req, res, ctx) => {
+
+        if (req.url.searchParams.get('name') === "noresults") {
+            return res(ctx.json({}))
+        }
         return res(
             ctx.json({
                 "ingredients": [

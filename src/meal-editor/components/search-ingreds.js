@@ -18,6 +18,7 @@ const SearchIngred = (props) => {
   const [searchResult, setSearchResult] = useState([]);
   const [userFoodsResult, setUserFoodsResult] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
+  const [searchedYet, setSearchedYet] = useState(false);
 
   const ref = useRef();
 
@@ -103,11 +104,11 @@ const SearchIngred = (props) => {
 
   //fetch data when searchbox changed
   useEffect(() => {
-
     const searchQueryChanged = () => {
       setSearchResult([]);
       setUserFoodsResult([]);
       if (searchQuery !== "") {
+        setSearchedYet(true);
         setLoadingData(true);
         fetchAuth({
           method: "get",
@@ -199,7 +200,7 @@ const SearchIngred = (props) => {
             />
           </button>
           <div className="w-[20px] h-[20px] absolute top-[50%] translate-y-[-45%] left-[7px] fill-text dark:fill-text-dark">
-            <SvgIcon icon="searchIcon" width="20" height="20"/>
+            <SvgIcon icon="searchIcon" width="20" height="20" />
           </div>
         </div>
       </div>
@@ -240,7 +241,11 @@ const SearchIngred = (props) => {
           </>
         ) : (
           <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-xl">
-            Couldn't find any food!
+            {!searchedYet ?
+              "Enter Food Name in Search Box"
+              :
+              "Search Found No Results!"
+            }
           </div>
         )}
       </div>
