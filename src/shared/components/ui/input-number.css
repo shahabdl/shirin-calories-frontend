@@ -1,0 +1,9 @@
+.arrow-none::-webkit-outer-spin-button,
+.arrow-none::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.arrow-none{
+    appearance: textfield;
+}

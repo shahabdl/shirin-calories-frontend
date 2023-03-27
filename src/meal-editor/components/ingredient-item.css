@@ -1,0 +1,60 @@
+.animate-ltr-fade{
+    animation-name: ltr-fade;
+    animation-duration: .2s;
+    animation-delay: 0.1s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+
+}
+.animate-rtl-fade{
+    animation-name: rtl-fade;
+    animation-duration: .2s;
+    opacity: 1;
+    animation-fill-mode:forwards;
+    animation-timing-function: ease-in;
+}
+
+.dark .food-card-result:before{
+    background-color: rgb(26 32 40 / .8);
+}
+
+.food-card-result:before{
+    content: "";
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background-color: rgb(255 255 255 / .8);
+    border-top-right-radius: 0.75rem;
+    border-top-left-radius: 0.75rem;
+}
+
+.food-card-result{
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+}
+
+.food-item-card:hover .food-card-result{
+    opacity: 1;
+}
+
+@keyframes ltr-fade{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes rtl-fade{
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

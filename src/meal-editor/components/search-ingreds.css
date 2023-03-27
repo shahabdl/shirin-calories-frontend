@@ -1,0 +1,17 @@
+.ingredient-place-holder{
+    clip-path: url(#ingredient-ph);
+    animation: translate0To100 2s ease-in-out infinite;
+    fill: url(#ph-gradient);
+    opacity: 0.1;
+}
+
+
+
+@keyframes translate0To100{
+    from{
+        x:-100px;
+    }
+    to{
+        x:calc(100% + 100px);
+    }
+}

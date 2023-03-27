@@ -1,0 +1,12 @@
+.side-menu .active:not(.dont-change-on-active){
+    background-color: white;
+}
+.dark .side-menu .active:not(.dont-change-on-active){
+    background-color: #0c0e12;
+}
+
+/* .side-menu a:hover svg,
+.side-menu .active svg{
+    transition: fill 0.3s ease-out;
+    fill: rgb(67 56 202) !important;
+} */

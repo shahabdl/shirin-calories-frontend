@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="13.229167mm"
+   height="13.229167mm"
+   viewBox="0 0 13.229167 13.229167"
+   version="1.1"
+   id="svg1123"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1120" />
+  <g
+     id="layer1">
+    <g
+       id="g329385"
+       transform="translate(868.14388,-608.27421)">
+      <circle
+         style="fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.264582;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+         id="circle329379"
+         cx="-861.5293"
+         cy="614.88879"
+         r="6.6145835" />
+      <path
+         id="path329381"
+         style="font-weight:100;font-size:10.5833px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Thin';letter-spacing:0px;direction:rtl;opacity:0.204956;fill:#000000;stroke-width:0.264583;stroke-dasharray:none"
+         d="m -861.34587,611.12032 10e-4,5.2e-4 c -0.94329,0 -1.65824,0.26117 -2.07171,0.72708 -1.53513,1.63396 -3.04867,3.23692 -4.49275,4.76871 a 6.6145835,6.6145835 0 0 0 5.04517,4.74699 c 1.06514,-1.13073 2.12983,-2.26164 3.19309,-3.39307 0.33272,-0.33594 0.51573,-0.77926 0.51573,-1.29398 v -10e-4 c -6.3e-4,-1.58841 -1.7512,-1.72367 -3.05253,-2.19263 0.92628,-0.91169 2.63964,-2.75953 2.63964,-2.75953 l 0.0739,-0.18965 -5.1e-4,-10e-4 c -0.561,-0.296 -1.22705,-0.41238 -1.85105,-0.41238 z" />
+      <path
+         d="m -861.61925,618.65643 c 1.51341,0 2.46591,-0.80433 2.46591,-1.97908 0,-2.5294 -4.4344,-1.37582 -4.4344,-3.74648 0,-1.016 0.80433,-1.60867 2.18016,-1.60867 0.63499,0 1.28058,0.127 1.84149,0.40217 l 0.0741,-0.1905 c -0.56091,-0.29633 -1.22766,-0.41275 -1.85207,-0.41275 -1.54517,0 -2.4765,0.6985 -2.4765,1.85208 0,2.50824 4.43441,1.40758 4.43441,3.75707 0,1.02658 -0.83608,1.72508 -2.18016,1.72508 -0.70908,0 -1.50283,-0.1905 -2.26483,-0.53975 l -0.0741,0.20108 c 0.73025,0.34925 1.55574,0.53975 2.28599,0.53975 z"
+         id="path329383"
+         style="font-weight:100;font-size:10.5833px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Thin';letter-spacing:0px;direction:rtl;fill:#1a2028;fill-opacity:1;stroke-width:0.264583" />
+    </g>
+  </g>
+</svg>
