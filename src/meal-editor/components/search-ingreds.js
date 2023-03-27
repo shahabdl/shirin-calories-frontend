@@ -136,7 +136,7 @@ const SearchIngred = (props) => {
             setLoadingData(false);
           })
           .catch((err) => {
-            if (err.error = "Auth_Error") {
+            if (err.error === "Auth_Error") {
               window.location.replace(`/user/login?redirectTo=${window.location.pathname}`);
             }
             setFoundResults(false);
