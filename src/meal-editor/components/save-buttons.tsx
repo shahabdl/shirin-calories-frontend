@@ -1,11 +1,20 @@
+import React from "react";
 import SvgIcon from "../../shared/components/ui/icons";
 
-const SaveButtons = ({ saveButton, saveAsButton, isSaving, onSave, onSaveToList }) => {
+interface saveButtonsProps {
+  saveButton: boolean,
+  saveAsButton: boolean,
+  isSaving: boolean,
+  onSave: Function,
+  onSaveToList: React.MouseEventHandler<HTMLButtonElement>
+}
+
+const SaveButtons = ({ saveButton, saveAsButton, isSaving, onSave, onSaveToList }: saveButtonsProps): JSX.Element => {
   return (
     <div className="group min-h-[60px] w-[60px] bg-primary dark:bg-primary-dark rounded-xl border-border dark:border-border-dark border-[1px] fixed right-[calc(((100%-60px)*1/4)+15px)] 2xl:right-[calc(((100%-60px)*1/6)+15px)] bottom-[15px] cursor-pointer transition-[top] overflow-hidden">
       <button
         disabled={!saveButton}
-        onClick={onSave}
+        onClick={()=>{onSave()}}
         className="grid justify-center items-center w-full h-[60px] dark:hover:bg-hover-dark group-hover:max-h-[60px] hover:bg-text-dark transition-[colors,max-height] duration-200 max-h-[0] overflow-hidden fill-text dark:fill-text-dark disabled:fill-icon-color-dark dark:disabled:fill-border-dark dark:disabled:hover:bg-primary-dark disabled:hover:bg-primary"
       >
         <SvgIcon

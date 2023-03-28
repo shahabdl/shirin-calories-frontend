@@ -1,6 +1,13 @@
 import React, { useCallback } from "react";
 
-const SvgIcon = ({ className, width = "45", height = "45", icon }) => {
+interface Props{
+  className:string,
+  width?:string|number,
+  height?:string|number,
+  icon:string
+}
+
+const SvgIcon = ({ className, width = "45", height = "45", icon }:Props):JSX.Element => {
 
   const calories = useCallback(() => {
     return (
@@ -99,8 +106,9 @@ const SvgIcon = ({ className, width = "45", height = "45", icon }) => {
     );
   }, [className]);
 
+  type Direction = "right" | "top" | "bottom" | "left";
   const arrowIcon = useCallback(
-    (dir) => {
+    (dir:Direction) => {
       let dirClass = "";
       switch (dir) {
         case "right":
