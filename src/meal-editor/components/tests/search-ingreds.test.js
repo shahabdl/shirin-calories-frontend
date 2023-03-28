@@ -26,21 +26,6 @@ it('should display "Enter Food Name in Search Box" when you opening search box',
     expect(screen.getByText(/Enter Food Name in Search Box/i)).toBeTruthy();
 })
 
-// it('should display "search found no results" when user search has no results', () => {
-
-//     const mockDisplayFunction = jest.fn();
-//     render(
-//         <IngredientProvider>
-//             <SearchIngred changeSearchVisibility={mockDisplayFunction} />
-//         </IngredientProvider>
-//     );
-
-//     const searchBox = screen.getByRole('search');
-//     userEvent.type(searchBox, 'noresults');
-//     jest.advanceTimersByTime(500);
-//     //expect(screen.getByText(/search found no results/i)).toBeTruthy();
-// })
-
 it('should display "search found no results" when user search has no results', async () => {
 
     const mockDisplayFunction = jest.fn();
