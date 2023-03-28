@@ -1,12 +1,20 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 
-const DropdownList = ({ options, className, defaultValue, renderTop }, props) => {
+interface Props {
+  options: Array<string>,
+  className: string,
+  defaultValue: string | number,
+  renderTop: boolean,
+  onSelect: Function
+}
+
+const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }: Props) => {
   const [selectedOption, setSelectedOption] = useState(0);
   const [showDropList, setShowDropList] = useState(false);
 
-  const onSelect = useCallback((selection) => {
-    if (typeof (props.onSelect) === "function") {
-      props.onSelect(selection);
+  const onSelectFunction = useCallback((selection: string) => {
+    if (typeof (onSelect) === "function") {
+      onSelect(selection);
     }
   }, [])
 
@@ -14,37 +22,44 @@ const DropdownList = ({ options, className, defaultValue, renderTop }, props) =>
     setShowDropList(!showDropList);
   };
 
-  const itemClickHandler = (e) => {
-    const parentItem = e.target.parentElement;
-    parentItem.childNodes.forEach((child) => {
-      child.classList.remove(
+  const itemClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+    const parentItem = e.currentTarget.parentElement;
+
+    for (let child in parentItem?.children) {
+      let childElement = parentItem?.children[parseInt(child)];
+      childElement?.classList.remove(
         "bg-secondary",
         "text-hover",
         "dark:bg-secondary-dark",
         "dark:text-hover-dark"
       );
-      child.classList.add("text-text", "bg-primary", "dark:bg-primary-dark");
-    });
-    e.target.classList.remove(
+      childElement?.classList.add("text-text", "bg-primary", "dark:bg-primary-dark");
+    }
+    e.currentTarget.classList.remove(
       "text-text",
       "bg-primary",
       "dark:bg-primary-dark"
     );
-    e.target.classList.add(
+    e.currentTarget.classList.add(
       "bg-secondary",
       "text-hover",
       "dark:bg-secondary-dark",
       "dark:text-text-dark"
     );
-    setSelectedOption(e.target.getAttribute("index"));
+    let indexNumber = e.currentTarget.getAttribute("index");
+    console.log(indexNumber);
+
+    if (indexNumber) {
+      setSelectedOption(parseInt(indexNumber));
+    }
     setShowDropList(false);
   };
 
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const checkIfClickedOutside = (e) => {
-      if (showDropList && ref.current && !ref.current.contains(e.target)) {
+    const checkIfClickedOutside = (e: MouseEvent) => {
+      if (showDropList && ref.current && !ref.current.contains(e.currentTarget as Node)) {
         setShowDropList(false);
       }
     };
@@ -57,19 +72,17 @@ const DropdownList = ({ options, className, defaultValue, renderTop }, props) =>
   }, [showDropList]);
 
   useEffect(() => {
-    onSelect(options[selectedOption]);
-  }, [selectedOption, options])
-
-  useEffect(() => {
-
-    if (isNaN(defaultValue)) {
+    if (typeof defaultValue === "string" && isNaN(parseInt(defaultValue))) {
       if (options.includes(defaultValue)) {
         setSelectedOption(options.indexOf(defaultValue));
+        onSelectFunction(options[options.indexOf(defaultValue)]);
       } else {
-        setSelectedOption(0)
+        setSelectedOption(0);
+        onSelectFunction(options[0]);
       }
-    } else {
-      onSelect(options[selectedOption]);
+    }
+    else {
+      onSelectFunction(options[selectedOption]);
     }
   }, [defaultValue])
 
@@ -115,7 +128,7 @@ const DropdownList = ({ options, className, defaultValue, renderTop }, props) =>
             ? options.map((option, i) => {
               return (
                 <div
-                  index={i}
+                  data-index={i}
                   key={option + i}
                   className={
                     (selectedOption === i
