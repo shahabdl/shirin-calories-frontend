@@ -213,13 +213,12 @@ const rootReducer = (state, action) => {
       return state;
   }
 };
-const IngredientProvider = ({ children }) => {
+const IngredientProvider = ({ children, testValue }) => {
   const [state, dispatch] = useReducer(rootReducer, initialState);
   // console.log('stack',stateStack);
   // console.log('state',state);
-
   return (
-    <ingredientContext.Provider value={{ state, dispatch }}>
+    <ingredientContext.Provider value={testValue ? {...testValue} : { state, dispatch }}>
       {children}
     </ingredientContext.Provider>
   );

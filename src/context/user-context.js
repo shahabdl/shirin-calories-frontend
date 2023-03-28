@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { createContext, useReducer } from "react";
 
 const initialUserState = {
@@ -65,11 +64,10 @@ const userReducer = (userState, action) => {
   }
 };
 
-const UserProvider = ({ children }) => {
+const UserProvider = ({ children, testValue }) => {
   const [userState, dispatch] = useReducer(userReducer, initialUserState);
-
   return (
-    <userContext.Provider value={{ userState, dispatch }}>
+    <userContext.Provider value={testValue? {...testValue} : { userState, dispatch }}>
       {children}
     </userContext.Provider>
   );

@@ -39,7 +39,7 @@ const IngredientItem = (props) => {
   };
 
   const editItemHandler = () => {
-    dispatch({ type: "pushState", payload: { uniqueFoodID: props.item.item._id, foodName:props.item.item.name } });
+    dispatch({ type: "pushState", payload: { uniqueFoodID: props.item.item._id, foodName: props.item.item.name } });
     props.fetchFood(props.item.item._id);
 
   }
@@ -51,7 +51,7 @@ const IngredientItem = (props) => {
       setEditable(false);
     }
   }, []);
-  
+
   return (
     <div
       className={
@@ -132,13 +132,12 @@ const IngredientItem = (props) => {
                 className="ml-auto text-button dark:text-button-dark border-button dark:border-button-dark border-solid border-[1px] px-2 pb-1 rounded-lg font-light text-xs">edit</button>
             </>
           ) : (
-            <div className="ml-auto text-button dark:text-button-dark border-button dark:border-button-dark border-solid border-[1px] px-2 pb-1 rounded-lg font-light text-xs">
+            <div className="ml-auto text-button dark:text-button-dark border-button dark:border-button-dark border-solid border-[1px] px-2 pb-1 rounded-lg font-light text-xs" data-testid="author-indicator">
               {props.item.item.owner ? "user" : "app"}
-
             </div>
           )}
         </div>
-        <div className="grid grid-cols-3 pt-2 gap-1">
+        <div className="grid grid-cols-3 pt-2 gap-1" data-testid="type-dropdown">
           <span>Type:</span>
           <DropdownList
             defaultValue={props.item.types ? props.item.types : 0}
@@ -147,7 +146,7 @@ const IngredientItem = (props) => {
             className="col-span-2"
           />
         </div>
-        <div className="grid grid-cols-3 pt-2 gap-1">
+        <div className="grid grid-cols-3 pt-2 gap-1" data-testid="unit-dropdown">
           <span>Unit:</span>
           <DropdownList
             defaultValue={props.item.unit ? props.item.unit : 0}
