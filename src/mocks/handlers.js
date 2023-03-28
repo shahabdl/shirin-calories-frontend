@@ -6,6 +6,7 @@ export const handlers = [
         if (req.url.searchParams.get('name') === "noresults") {
             return res(ctx.json({}))
         }
+        
         return res(
             ctx.json({
                 "ingredients": [
