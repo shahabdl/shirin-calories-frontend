@@ -4,7 +4,8 @@ import SvgIcon from "../ui/icons";
 
 import "./side-menu.css";
 
-const SideMenu = (props) => {
+
+const SideMenu = () => {
   const [wideMenu, setWideMenu] = useState(false);
 
   return (
