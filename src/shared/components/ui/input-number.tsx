@@ -4,10 +4,10 @@ import React from "react";
 import "./input-number.css";
 
 interface Props{
-  defaultValue : number,
-  canBeNegative: boolean,
+  defaultValue? : number,
+  canBeNegative?: boolean,
   onChange: Function,
-  className: string
+  className?: string
 }
 
 const InputNumber = ({defaultValue = 0, canBeNegative = false, onChange, className}:Props) => {
