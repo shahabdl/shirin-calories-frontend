@@ -2,7 +2,19 @@ import React, { useReducer, useEffect } from "react";
 
 import { validate } from "../../utils/validators";
 
-const inputReducer = (state, action) => {
+interface State {
+  value: string,
+  isTouched: boolean,
+  isValid: boolean,
+}
+
+interface Action {
+  type: string,
+  val: string,
+  validators: Array<{ type: string, val: number }>
+}
+
+const inputReducer = (state: State, action: Action) => {
   switch (action.type) {
     case "CHANGE":
       return {
@@ -21,7 +33,19 @@ const inputReducer = (state, action) => {
   }
 };
 
-const Input = (props) => {
+interface Props {
+  id: string,
+  onInput: Function,
+  validators: Array<{ type: string, val: number }>,
+  element: string,
+  type: string,
+  rows: number,
+  placeholder: string,
+  errorText: string,
+  className: string
+}
+
+const Input = (props: Props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: "",
     isTouched: false,
@@ -35,7 +59,7 @@ const Input = (props) => {
     onInput(id, value, isValid);
   }, [id, value, isValid, onInput]);
 
-  const changeHandler = (event) => {
+  const changeHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     dispatch({
       type: "CHANGE",
       val: event.target.value,
@@ -43,9 +67,11 @@ const Input = (props) => {
     });
   };
 
-  const blurHandler = (state, action) => {
+  const blurHandler = () => {
     dispatch({
       type: "BLUR",
+      val:"",
+      validators:[]
     });
   };
 
@@ -57,7 +83,7 @@ const Input = (props) => {
         value={inputState.value}
         onChange={changeHandler}
         onBlur={blurHandler}
-        className={!inputState.isValid && inputState.isTouched && "is-invalid"}
+        className={!inputState.isValid ? (inputState.isTouched ? "is-invalid" : "") : ""}
       />
     ) : (
       <input
@@ -67,9 +93,8 @@ const Input = (props) => {
         onChange={changeHandler}
         onBlur={blurHandler}
         value={inputState.value}
-        list={props.list}
         className={`${!inputState.isValid && inputState.isTouched && "is-invalid"
-          } ${props.type === "checkbox" ? "form-check-input" : "form-control"} ${props.className}` }
+          } ${props.type === "checkbox" ? "form-check-input" : "form-control"} ${props.className}`}
       />
     );
   return (
