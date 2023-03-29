@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useContext, useEffect } from "react";
+import React from "react";
+import { useState, useContext, useEffect } from "react";
 import { userContext } from "../../../../context/user-context"
 import DropdownMenu from "./dropdown-menu";
 import { fetchAuth } from "../../../../user/utils/fetch-auth";
@@ -24,6 +24,7 @@ const UserMenu = (props) => {
                 break;
             case true:
                 mode = "";
+                break;
             default:
                 mode = "";
                 break;

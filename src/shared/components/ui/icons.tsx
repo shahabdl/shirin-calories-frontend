@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 
 interface Props{
-  className:string,
+  className?:string,
   width?:string|number,
   height?:string|number,
   icon:string

@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from "react";
+import React from "react";
 
-const DropdownMenu = (props) => {
+interface Props {
+  onChange: Function,
+  className: string,
+  ID: string,
+  buttonClass: string,
+  label: string,
+  children: Array<JSX.Element>,
+  listClass: string
+}
+
+const DropdownMenu = (props: Props) => {
   const [showMenu, setShowMenu] = useState(false);
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   const clickHandler = () => {
     setShowMenu(!showMenu);
   };
 
   useEffect(() => {
-    const checkIfClickedOutside = (e) => {
-      if (showMenu && ref.current && !ref.current.contains(e.target)) {
+    const checkIfClickedOutside = (e: Event) => {
+      if (showMenu && ref.current && !ref.current.contains(e.target as Node)) {
         setShowMenu(false);
       }
     };
@@ -47,14 +58,14 @@ const DropdownMenu = (props) => {
         }
         id={props.ID + "-list"}
       >
-        {props.children.map((navlink, index) => {
+        {props.children.map((navlink, index: number) => {
           if (!(props.label === "first-child" && index === 0)) {
             return (
               <li
                 className="first:pt-0"
                 key={props.ID + index}
                 id={props.ID + "-" + index}
-                //onClick={()=>{setShowMenu(!showMenu);}}
+              //onClick={()=>{setShowMenu(!showMenu);}}
               >
                 {navlink}
               </li>

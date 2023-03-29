@@ -1,5 +1,6 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import SvgIcon from '../../ui/icons';
+import SvgIcon from '../icons';
 
 test('Write icon name when icon is not available', () => {
     render(<SvgIcon icon="test" />);
