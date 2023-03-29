@@ -1,41 +1,46 @@
 import { useState, useEffect } from "react";
+import React from "react";
 
 import "./input-number.css";
 
-const InputNumber = (props) => {
-  const onChange = props.onChange;
+interface Props{
+  defaultValue : number,
+  canBeNegative: boolean,
+  onChange: Function,
+  className: string
+}
 
-  const [inputValue, setInputValue] = useState(props.defaultValue ? props.defaultValue : "0");
+const InputNumber = ({defaultValue = 0, canBeNegative = false, onChange, className}:Props) => {
+
+  const [inputValue, setInputValue] = useState<number>(defaultValue);
 
   const decNumber = () => {
-    if (props.canBeNegative) {
-      setInputValue(parseFloat(inputValue) - 1)
+    if (canBeNegative) {
+      setInputValue(inputValue - 1)
     } else {
-      if (inputValue >= 1) setInputValue(parseFloat(inputValue) - 1);
+      if (inputValue >= 1) setInputValue(inputValue - 1);
     }
   };
   const incNumber = () => {
-    setInputValue(parseFloat(inputValue) + 1);
+    setInputValue(inputValue + 1);
   };
 
-  const onChangeHandler = (e) => {
-    if (e.target.value !== "") setInputValue(parseFloat(e.target.value));
-  };
-
-  useEffect(() => {
-    if (onChange) {
-      return onChange(inputValue);
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value !== "") {
+      let floatTargetValue = parseFloat(e.target.value);
+      onChange(floatTargetValue);
+      setInputValue(floatTargetValue);
     }
-  }, [inputValue]);
+  };
 
   useEffect(() => {
-    if (!isNaN(props.defaultValue))
-      setInputValue(props.defaultValue);
-  }, [props.defaultValue])
+    if (!isNaN(defaultValue))
+      setInputValue(defaultValue);
+  }, [defaultValue])
 
 
   return (
-    <div className={"w-[100%] flex " + props.className}>
+    <div className={"w-[100%] flex " + className}>
       <div
         className="grid items-center w-[40px] border-[1px] border-border dark:border-border-dark rounded-l-lg bg-primary dark:bg-primary-dark hover:bg-background dark:hover:bg-background-dark select-none text-center cursor-pointer transition-colors"
         onClick={decNumber}
