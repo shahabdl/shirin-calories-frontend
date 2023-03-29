@@ -1,76 +1,121 @@
 import { useEffect, useRef, useState } from "react";
+import React from "react";
 import SvgIcon from "../icons";
 
-const CircularGraph = (props) => {
-    const [itemsData, setItemsData] = useState([]);
-    const [midValPosition, setMidValPosition] = useState({});
-    const ref = useRef();
+interface Props {
+    id: string,
+    middleValue: {
+        legend: string,
+        value: number,
+        icon: string
+    },
+    data: [{
+        name: string,
+        value: number,
+        color: string,
+        icon: string,
+        strokeWidth: string,
+        hoverStrokeWidth: string
+    }]
+    ,
+    options: {
+        showLegend: boolean,
+        showMiddleValue: boolean,
+        showCenterIcons: boolean,
+        iconSize: number,
+        padding: number
+    }
+};
 
-    const graphLineMouseOverHandler = (e) => {
-        let itemId = e.getAttribute("data-legend-id");
+interface midValType {
+    top: number,
+};
+
+interface graphItemData {
+    totalPercent: number,
+    percent: number,
+    endPoint: {
+        x: number,
+        y: number
+    },
+    stringPath: string
+}
+
+
+const CircularGraph = (props: Props) => {
+    const [itemsData, setItemsData] = useState<Array<graphItemData>>([]);
+    const [midValPosition, setMidValPosition] = useState<midValType>({ top: 0 });
+    const ref = useRef<HTMLDivElement>(null);
+
+    const graphLineMouseOverHandler = (e: React.MouseEvent<HTMLElement | SVGElement>) => {
+        let itemId = e.currentTarget.getAttribute("data-legend-id");
         if (itemId) {
             let item = document.getElementById(itemId);
             let middleLegend = document.getElementById("graph-mid-value-" + props.middleValue.legend + "-" + props.id);
-            let itemIndex = e.getAttribute('data-index');
-            middleLegend.classList.add('opacity-0');
-            item.classList.remove('opacity-0')
-            e.style.strokeWidth = props.data[itemIndex].hoverStrokeWidth + "px";
+            let itemIndex = e.currentTarget.getAttribute('data-index');
+            middleLegend?.classList.add('opacity-0');
+            item?.classList.remove('opacity-0')
+            if (itemIndex) {
+                e.currentTarget.style.strokeWidth = props.data[parseInt(itemIndex)].hoverStrokeWidth + "px";
+            }
         }
     }
-    const graphLineMouseLeaveHandler = (e) => {
-        let itemId = e.getAttribute("data-legend-id");
+    const graphLineMouseLeaveHandler = (e: React.MouseEvent<HTMLElement | SVGElement>) => {
+        let itemId = e.currentTarget.getAttribute("data-legend-id");
         if (itemId) {
             let item = document.getElementById(itemId);
             let middleLegend = document.getElementById("graph-mid-value-" + props.middleValue.legend + "-" + props.id);
-            let itemIndex = e.getAttribute('data-index');
+            let itemIndex = e.currentTarget.getAttribute('data-index');
 
-            middleLegend.classList.remove('opacity-0');
-            item.classList.add('opacity-0')
-
-            e.style.strokeWidth = props.data[itemIndex].strokeWidth + "px";
+            middleLegend?.classList.remove('opacity-0');
+            item?.classList.add('opacity-0')
+            if (itemIndex) {
+                e.currentTarget.style.strokeWidth = props.data[parseInt(itemIndex)].strokeWidth + "px";
+            }
         }
     }
     useEffect(() => {
-
-        let total = 0;
-        for (let item in props.data) {
-            total += props.data[item].value;
-        }
-        let tempData = []
-        let percentage = 0;
-        for (let item in props.data) {
-            percentage += props.data[item].value / total;
-            tempData.push({ totalPercent: percentage, percent: props.data[item].value / total });
-        }
-
-        let graphRadius, graphWidth;
-        graphWidth = ref.current.offsetWidth - props.options.padding * 2;
-        graphRadius = graphWidth / 2;
-
-        let sinVal, cosVal;
-        let startPoint = { x: 0, y: 0 };
-        let endPoint = { x: 0, y: 0 }
-        for (let index in tempData) {
-            if (index == 0) {
-                startPoint.x = graphRadius + props.options.padding;
-                startPoint.y = props.options.padding;
-            } else if (index > 0) {
-                startPoint.x = endPoint.x;
-                startPoint.y = endPoint.y;
+        if (ref.current) {
+            let total = 0;
+            for (let item in props.data) {
+                total += props.data[item].value;
             }
-            sinVal = Math.sin(tempData[index].totalPercent * Math.PI * 2);
-            cosVal = (1 - Math.cos(tempData[index].totalPercent * Math.PI * 2));
-            endPoint.x = sinVal * graphRadius + graphWidth / 2 + props.options.padding;
-            endPoint.y = cosVal * graphRadius + props.options.padding;
+            let tempData = [] as Array<graphItemData>;
+            let percentage = 0;
+            for (let item in props.data) {
+                percentage += props.data[item].value / total;
+                tempData.push({ totalPercent: percentage, percent: props.data[item].value / total, endPoint: { x: 0, y: 0 }, stringPath: "" });
+            }
 
-            tempData[index].endPoint = { ...endPoint };
-            let newArcString =
-                `M ${startPoint.x} ${startPoint.y}
-                    A ${graphRadius} ${graphRadius} 0 ${tempData[index].percent > 0.5 ? 1 : 0} 1 ${endPoint.x} ${endPoint.y}`;
-            tempData[index].stringPath = newArcString;
-            setMidValPosition({ top: props.options.padding + graphRadius });
+            let graphRadius, graphWidth;
+            graphWidth = ref.current.offsetWidth - props.options.padding * 2;
+            graphRadius = graphWidth / 2;
+
+            let sinVal, cosVal;
+            let startPoint = { x: 0, y: 0 };
+            let endPoint = { x: 0, y: 0 }
+            for (let index in tempData) {
+                if (parseInt(index) === 0) {
+                    startPoint.x = graphRadius + props.options.padding;
+                    startPoint.y = props.options.padding;
+                } else if (parseInt(index) > 0) {
+                    startPoint.x = endPoint.x;
+                    startPoint.y = endPoint.y;
+                }
+                sinVal = Math.sin(tempData[index].totalPercent * Math.PI * 2);
+                cosVal = (1 - Math.cos(tempData[index].totalPercent * Math.PI * 2));
+                endPoint.x = sinVal * graphRadius + graphWidth / 2 + props.options.padding;
+                endPoint.y = cosVal * graphRadius + props.options.padding;
+
+                tempData[index].endPoint = { ...endPoint };
+                let newArcString =
+                    `M ${startPoint.x} ${startPoint.y}
+                A ${graphRadius} ${graphRadius} 0 ${tempData[index].percent > 0.5 ? 1 : 0} 1 ${endPoint.x} ${endPoint.y}`;
+                tempData[index].stringPath = newArcString;
+                setMidValPosition({ top: props.options.padding + graphRadius });
+            }
+            setItemsData(tempData);
         }
-        setItemsData(tempData);
     }, [props])
 
     return (
@@ -85,7 +130,7 @@ const CircularGraph = (props) => {
                             {props.middleValue.legend}
                         </div>
                         <div className="h-min">
-                            {isNaN(props.middleValue.value)?"-":props.middleValue.value}
+                            {isNaN(props.middleValue.value) ? "-" : props.middleValue.value}
                         </div>
                     </div>
                     {itemsData.map((item, index) => {
@@ -121,10 +166,10 @@ const CircularGraph = (props) => {
                             <path
                                 data-index={index}
                                 onMouseOver={(e) => {
-                                    graphLineMouseOverHandler(e.currentTarget);
+                                    graphLineMouseOverHandler(e);
                                 }}
                                 onMouseLeave={(e) => {
-                                    graphLineMouseLeaveHandler(e.currentTarget);
+                                    graphLineMouseLeaveHandler(e);
                                 }}
                                 key={index}
                                 data-legend-id={index + "-" + props.data[index].name + "-legend-" + props.id}
@@ -146,10 +191,10 @@ const CircularGraph = (props) => {
                                 className="flex gap-2"
                                 key={index + "-legend-icon-" + props.id}
                                 onMouseEnter={(e) => {
-                                    graphLineMouseOverHandler(e.currentTarget);
+                                    graphLineMouseOverHandler(e);
                                 }}
                                 onMouseLeave={(e) => {
-                                    graphLineMouseLeaveHandler(e.currentTarget);
+                                    graphLineMouseLeaveHandler(e);
                                 }}
                                 data-legend-id={index + "-" + props.data[index].name + "-legend-" + props.id}
                                 data-index={index}
