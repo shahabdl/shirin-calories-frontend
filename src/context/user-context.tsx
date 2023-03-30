@@ -84,12 +84,12 @@ const userReducer = (userState: StateType, action: action) => {
   }
 };
 
-interface Props {
+interface PropsType {
   children: React.ReactNode,
   testValue: any
 }
 
-const UserProvider = ({ children, testValue }: Props) => {
+const UserProvider = ({ children, testValue }: PropsType) => {
   const [userState, dispatch] = useReducer(userReducer, initialUserState);
   return (
     <userContext.Provider value={testValue ? { ...testValue, dispatch } : { userState, dispatch }}>
