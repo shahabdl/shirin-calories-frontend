@@ -20,21 +20,18 @@ const IngredientItem = (props) => {
     }, 500);
   };
   const changeType = (type) => {
-    console.log(type);
     dispatch({
       type: "changeIngredient",
       payload: { id: props.item.item._id, type: "types", value: type },
     });
   };
   const changeWeight = (weight) => {
-    console.log(weight);
     dispatch({
       type: "changeIngredient",
       payload: { id: props.item.item._id, type: "weight", value: weight },
     });
   };
   const changeUnit = (unit) => {
-    console.log(unit);
     dispatch({
       type: "changeIngredient",
       payload: { id: props.item.item._id, type: "unit", value: unit },

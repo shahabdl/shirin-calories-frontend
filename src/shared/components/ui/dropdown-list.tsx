@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface Props {
   options: Array<string>,
@@ -12,19 +12,12 @@ const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }:
   const [selectedOption, setSelectedOption] = useState(0);
   const [showDropList, setShowDropList] = useState(false);
 
-  const onSelectFunction = useCallback((selection: string) => {
-    if (typeof (onSelect) === "function") {
-      onSelect(selection);
-    }
-  }, [])
-
   const toggleDropList = () => {
     setShowDropList(!showDropList);
   };
 
   const itemClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     const parentItem = e.currentTarget.parentElement;
-
     for (let child in parentItem?.children) {
       let childElement = parentItem?.children[parseInt(child)];
       childElement?.classList.remove(
@@ -46,10 +39,9 @@ const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }:
       "dark:bg-secondary-dark",
       "dark:text-text-dark"
     );
-    let indexNumber = e.currentTarget.getAttribute("index");
-    console.log(indexNumber);
-
-    if (indexNumber) {
+    let indexNumber = e.currentTarget.getAttribute("data-index");    
+    if (indexNumber !== null) {
+      console.log(indexNumber);
       setSelectedOption(parseInt(indexNumber));
     }
     setShowDropList(false);
@@ -59,13 +51,11 @@ const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }:
 
   useEffect(() => {
     const checkIfClickedOutside = (e: MouseEvent) => {
-      if (showDropList && ref.current && !ref.current.contains(e.currentTarget as Node)) {
+      if (showDropList && ref.current && !ref.current.contains(e.target as Node)) {
         setShowDropList(false);
       }
     };
-
     document.addEventListener("mousedown", checkIfClickedOutside);
-
     return () => {
       document.removeEventListener("mousedown", checkIfClickedOutside);
     };
@@ -74,17 +64,21 @@ const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }:
   useEffect(() => {
     if (typeof defaultValue === "string" && isNaN(parseInt(defaultValue))) {
       if (options.includes(defaultValue)) {
-        setSelectedOption(options.indexOf(defaultValue));
-        onSelectFunction(options[options.indexOf(defaultValue)]);
+        let index = options.indexOf(defaultValue);
+        setSelectedOption(index);
       } else {
         setSelectedOption(0);
-        onSelectFunction(options[0]);
       }
     }
     else {
-      onSelectFunction(options[selectedOption]);
+      onSelect(options[selectedOption]);
     }
   }, [defaultValue])
+
+  useEffect(()=>{    
+    onSelect(options[selectedOption]);
+  },[selectedOption])
+
 
   return (
     <div ref={ref} className={"w-[100%] z-90 " + className}>
