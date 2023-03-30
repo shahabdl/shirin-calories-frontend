@@ -18,17 +18,18 @@ const InputNumber = ({defaultValue = 0, canBeNegative = false, onChange, classNa
     if (canBeNegative) {
       setInputValue(inputValue - 1)
     } else {
-      if (inputValue >= 1) setInputValue(inputValue - 1);
+      if (inputValue >= 1) {
+        setInputValue(inputValue - 1);
+      };
     }
   };
   const incNumber = () => {
     setInputValue(inputValue + 1);
   };
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value !== "") {
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {    
+    if (e.currentTarget.value !== "") {
       let floatTargetValue = parseFloat(e.target.value);
-      onChange(floatTargetValue);
       setInputValue(floatTargetValue);
     }
   };
@@ -38,6 +39,9 @@ const InputNumber = ({defaultValue = 0, canBeNegative = false, onChange, classNa
       setInputValue(defaultValue);
   }, [defaultValue])
 
+  useEffect(()=>{
+    onChange(inputValue);
+  },[inputValue])
 
   return (
     <div className={"w-[100%] flex " + className}>
