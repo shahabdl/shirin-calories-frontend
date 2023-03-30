@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 
 interface Props {
   options: Array<string>,
-  className: string,
-  defaultValue: string | number,
-  renderTop: boolean,
+  className?: string,
+  defaultValue?: string | number,
+  renderTop?: boolean,
   onSelect: Function
 }
 
-const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }: Props) => {
-  const [selectedOption, setSelectedOption] = useState(0);
+const DropdownList = ({ options, className = "", defaultValue = 0, renderTop = false, onSelect }: Props) => {
+  const [selectedOption, setSelectedOption] = useState<number>(typeof defaultValue === "number" ? defaultValue : 0);
   const [showDropList, setShowDropList] = useState(false);
 
   const toggleDropList = () => {
@@ -22,24 +22,19 @@ const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }:
       let childElement = parentItem?.children[parseInt(child)];
       childElement?.classList.remove(
         "bg-secondary",
-        "text-hover",
         "dark:bg-secondary-dark",
-        "dark:text-hover-dark"
       );
-      childElement?.classList.add("text-text", "bg-primary", "dark:bg-primary-dark");
+      childElement?.classList.add("bg-primary", "dark:bg-primary-dark");
     }
     e.currentTarget.classList.remove(
-      "text-text",
       "bg-primary",
       "dark:bg-primary-dark"
     );
     e.currentTarget.classList.add(
       "bg-secondary",
-      "text-hover",
       "dark:bg-secondary-dark",
-      "dark:text-text-dark"
     );
-    let indexNumber = e.currentTarget.getAttribute("data-index");    
+    let indexNumber = e.currentTarget.getAttribute("data-index");
     if (indexNumber !== null) {
       console.log(indexNumber);
       setSelectedOption(parseInt(indexNumber));
@@ -75,20 +70,21 @@ const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }:
     }
   }, [defaultValue])
 
-  useEffect(()=>{    
+  useEffect(() => {
     onSelect(options[selectedOption]);
-  },[selectedOption])
+  }, [selectedOption])
 
 
   return (
     <div ref={ref} className={"w-[100%] z-90 " + className}>
-      <div
+      <button
+        name="dropdown-list"
         onClick={toggleDropList}
         className={
           "bg-white px-2 py-1 border-solid border-[1px] border-border dark:border-border-dark rounded-lg font-light w-[100%] text-left flex bg-primary dark:bg-primary-dark cursor-pointer"
         }
       >
-        <span className="-translate-y-[2px]">{options[selectedOption]}</span>
+        {options[selectedOption]}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -103,9 +99,10 @@ const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }:
             d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
           />
         </svg>
-      </div>
+      </button>
 
       <div
+        data-testid="dropdown-options"
         className={
           (showDropList ? "" : "hidden ") + " relative overflow-y-visible z-10"
         }
@@ -122,12 +119,13 @@ const DropdownList = ({ options, className, defaultValue, renderTop, onSelect }:
             ? options.map((option, i) => {
               return (
                 <div
+                  data-testid={`option-${option}`}
                   data-index={i}
                   key={option + i}
                   className={
                     (selectedOption === i
                       ? "bg-secondary dark:bg-secondary-dark text-white"
-                      : "bg-background dark:bg-primary-dark") +
+                      : "bg-primary dark:bg-primary-dark") +
                     " cursor-pointer font-light p-1 rounded-md hover:bg-secondary dark:hover:bg-secondary-dark hover:text-hover dark:hover:text-text-dark transition-colors"
                   }
                   onClick={itemClickHandler}
