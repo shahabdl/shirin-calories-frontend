@@ -1,19 +1,30 @@
-const defaultOptions = { useToken: true, json: true, method: "get" };
+interface OptionsType {
+  [key: string]: string | boolean
+}
 
-const addDefaultOptions = (options) => {
-  let newOptions = { ...options };
+const defaultOptions = { useToken: true, json: true, formData: "" };
+
+const addDefaultOptions = (options: OptionsType) => {
+  let newOptions: OptionsType = { ...options };
   if (!options) return defaultOptions;
   for (let key in defaultOptions) {
     if (!(key in options)) {
-      newOptions[key] = defaultOptions[key];
+      newOptions[key] = defaultOptions[key as keyof typeof defaultOptions];
     }
   }
   return newOptions;
 };
 
-const fetchAuth = async (config) => {
+interface ConfigType {
+  method: string,
+  url: string,
+  options: OptionsType,
+  body: string
+}
+
+const fetchAuth = async (config: ConfigType) => {
   let { method, url, options, body } = config;
-  let headers = {}
+  let headers: Record<string, string> = {}
   try {
     options = addDefaultOptions(options);
 
@@ -51,7 +62,7 @@ const fetchAuth = async (config) => {
         throw new Error(error);
       });
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error as string);
   }
 };
 
