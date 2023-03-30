@@ -1,6 +1,26 @@
 import { createContext, useReducer } from "react";
+import React from "react";
 
-const initialUserState = {
+interface StateType {
+  userName: string | null,
+  userID: string | null
+  userEmail: string | null,
+  userAccessToken: string | null,
+  userAvatar: {
+    image: string | null,
+    type: string | null
+  },
+  userSettings: {
+    darkMode: string | null
+  },
+}
+
+interface action {
+  type: string,
+  payload: any
+}
+
+const initialUserState: StateType = {
   userName: window.localStorage.getItem("_user_name"),
   userID: window.localStorage.getItem("_uuid"),
   userEmail: window.localStorage.getItem("_email"),
@@ -11,9 +31,9 @@ const initialUserState = {
   },
 };
 
-const userContext = createContext();
+const userContext = createContext(null);
 
-const setUser = (state, action) => {
+const setUser = (state: StateType, action: action) => {
   let tempState = { ...state };
   tempState.userName = action.payload.userName;
   tempState.userID = action.payload.userID;
@@ -29,7 +49,7 @@ const setUser = (state, action) => {
   return tempState;
 };
 
-const logOutUser = (state) => {
+const logOutUser = (state: StateType) => {
   window.localStorage.removeItem("_access_token");
   window.localStorage.removeItem("_email");
   window.localStorage.removeItem("_uuid");
@@ -44,19 +64,19 @@ const logOutUser = (state) => {
   return tempState;
 };
 
-const changeDarkMode = (state, action) => {
+const changeDarkMode = (state: StateType, action: action) => {
   let tempState = { ...state };
   tempState.userSettings = { darkMode: action.payload };
-  window.localStorage.setItem("_dark_mode",action.payload);
+  window.localStorage.setItem("_dark_mode", action.payload);
   return tempState;
 };
 
-const userReducer = (userState, action) => {
+const userReducer = (userState: StateType, action: action) => {
   switch (action.type) {
     case "setUser":
       return setUser(userState, action);
     case "logOutUser":
-      return logOutUser();
+      return logOutUser(userState);
     case "changeDarkMode":
       return changeDarkMode(userState, action);
     default:
@@ -64,10 +84,15 @@ const userReducer = (userState, action) => {
   }
 };
 
-const UserProvider = ({ children, testValue }) => {
+interface Props {
+  children: React.ReactNode,
+  testValue: any
+}
+
+const UserProvider = ({ children, testValue }: Props) => {
   const [userState, dispatch] = useReducer(userReducer, initialUserState);
   return (
-    <userContext.Provider value={testValue? {...testValue} : { userState, dispatch }}>
+    <userContext.Provider value={testValue ? { ...testValue, dispatch } : { userState, dispatch }}>
       {children}
     </userContext.Provider>
   );
