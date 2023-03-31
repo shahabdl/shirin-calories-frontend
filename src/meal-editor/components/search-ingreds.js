@@ -8,7 +8,6 @@ import React, {
 import { fetchAuth } from "../../user/utils/fetch-auth";
 import SearchItem from "./search-item";
 import { ingredientContext } from "../../context/meal-context";
-
 import "./search-ingreds.css";
 import SvgIcon from "../../shared/components/ui/icons";
 

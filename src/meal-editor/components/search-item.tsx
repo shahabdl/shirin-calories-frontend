@@ -1,6 +1,12 @@
 import React from "react";
+import { itemType } from "../../shared/types/food-item-type";
 
-const SearchItem = (props) => {
+interface PropsType {
+  clickHandler: (item: itemType) => null,
+  ingredParams: itemType
+}
+
+const SearchItem = (props: PropsType) => {
   const clickHandler = () => {
     props.clickHandler(props.ingredParams);
   };
