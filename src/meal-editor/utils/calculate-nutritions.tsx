@@ -7,23 +7,26 @@ const CalculateNutritions = (ingredient: IngredientType) => {
     let item = ingredient.item.types[ingredient.types];
 
     //recursive function to convert every nutrition in a food with weight and unit of food
-    const foodConverter = (food: Record<string, any> | number) => {
-        let newItem: Record<string, any> = {};
-
+    const foodConverter = <T extends Record<string, any> | number>(food: T) => {
         if (typeof food === "number") {
-            newItem = { num: roundToDec(convertedWeight * food / 100) };
+            return roundToDec(convertedWeight * food / 100) as T;
         } else if (typeof food === "object") {
+            let newItem: Record<string, any> = {};
             for (let nutrition in food) {
                 let obj = food[nutrition]
-                let foodConverterResult = {...foodConverter(obj)};
-                if('num' in foodConverterResult){
-                    newItem[nutrition] = foodConverterResult.num;
+                let foodConverterResult;
+                if (typeof obj === "object") {
+                    foodConverterResult = { ...foodConverter<Record<string, any>>(obj) };
+                } else if (typeof obj === "number") {
+                    foodConverterResult = foodConverter<number>(obj);
                 }else{
-                    newItem[nutrition] = {...foodConverterResult};
+                    return;
                 }
+                newItem[nutrition] = foodConverterResult ;
             }
+            return { ...newItem };
         }
-        return { ...newItem };
+        return;
     }
 
     return foodConverter(item);
