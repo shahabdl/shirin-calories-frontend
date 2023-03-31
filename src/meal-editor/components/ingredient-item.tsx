@@ -5,10 +5,17 @@ import DropdownList from "../../shared/components/ui/dropdown-list";
 import InputNumber from "../../shared/components/ui/input-number";
 import CircularGraph from "../../shared/components/ui/graph/circular-graph";
 import "./ingredient-item.css";
+import { UserStateType } from "../../shared/types/context-types";
 
-const IngredientItem = (props) => {
+interface PropsType {
+  item: any,
+  id: string,
+  fetchFood: Function,
+}
+
+const IngredientItem = (props: PropsType) => {
   const { state, dispatch } = useContext(ingredientContext);
-  const { userState } = useContext(userContext);
+  const { userState } = useContext<{ userState: UserStateType; dispatch: React.Dispatch<any> }>(userContext);
 
   const [removeAnimation, setRemoveAnimation] = useState(false);
   const [editable, setEditable] = useState(false);
@@ -19,19 +26,19 @@ const IngredientItem = (props) => {
       dispatch({ type: "removeIngredient", payload: props.item.item._id });
     }, 500);
   };
-  const changeType = (type) => {
+  const changeType = (type: string) => {
     dispatch({
       type: "changeIngredient",
       payload: { id: props.item.item._id, type: "types", value: type },
     });
   };
-  const changeWeight = (weight) => {
+  const changeWeight = (weight: number) => {
     dispatch({
       type: "changeIngredient",
       payload: { id: props.item.item._id, type: "weight", value: weight },
     });
   };
-  const changeUnit = (unit) => {
+  const changeUnit = (unit: string) => {
     dispatch({
       type: "changeIngredient",
       payload: { id: props.item.item._id, type: "unit", value: unit },

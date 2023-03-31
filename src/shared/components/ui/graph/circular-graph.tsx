@@ -9,14 +9,14 @@ interface Props {
         value: number,
         icon: string
     },
-    data: [{
+    data: {
         name: string,
         value: number,
         color: string,
         icon: string,
         strokeWidth: string,
         hoverStrokeWidth: string
-    }]
+    }[]
     ,
     options: {
         showLegend: boolean,

@@ -1,26 +1,13 @@
 import { createContext, useReducer } from "react";
 import React from "react";
-
-interface StateType {
-  userName: string | null,
-  userID: string | null
-  userEmail: string | null,
-  userAccessToken: string | null,
-  userAvatar: {
-    image: string | null,
-    type: string | null
-  },
-  userSettings: {
-    darkMode: string | null
-  },
-}
+import { UserStateType } from "../shared/types/context-types";
 
 interface action {
   type: string,
   payload: any
 }
 
-const initialUserState: StateType = {
+const initialUserState: UserStateType = {
   userName: window.localStorage.getItem("_user_name"),
   userID: window.localStorage.getItem("_uuid"),
   userEmail: window.localStorage.getItem("_email"),
@@ -30,10 +17,13 @@ const initialUserState: StateType = {
     darkMode: window.localStorage.getItem("dark_mode"),
   },
 };
+interface UserContextType{
+  userState: UserStateType;
+  dispatch: React.Dispatch<any>
+}
+const userContext = createContext<UserContextType>({ userState: initialUserState, dispatch: () => null });
 
-const userContext = createContext(null);
-
-const setUser = (state: StateType, action: action) => {
+const setUser = (state: UserStateType, action: action) => {
   let tempState = { ...state };
   tempState.userName = action.payload.userName;
   tempState.userID = action.payload.userID;
@@ -49,7 +39,7 @@ const setUser = (state: StateType, action: action) => {
   return tempState;
 };
 
-const logOutUser = (state: StateType) => {
+const logOutUser = (state: UserStateType) => {
   window.localStorage.removeItem("_access_token");
   window.localStorage.removeItem("_email");
   window.localStorage.removeItem("_uuid");
@@ -64,14 +54,14 @@ const logOutUser = (state: StateType) => {
   return tempState;
 };
 
-const changeDarkMode = (state: StateType, action: action) => {
+const changeDarkMode = (state: UserStateType, action: action) => {
   let tempState = { ...state };
   tempState.userSettings = { darkMode: action.payload };
   window.localStorage.setItem("_dark_mode", action.payload);
   return tempState;
 };
 
-const userReducer = (userState: StateType, action: action) => {
+const userReducer = (userState: UserStateType, action: action) => {
   switch (action.type) {
     case "setUser":
       return setUser(userState, action);

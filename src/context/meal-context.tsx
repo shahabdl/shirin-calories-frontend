@@ -1,41 +1,16 @@
 import { createContext, ReactNode, useReducer } from "react";
 import { CalculateNutritions } from "../meal-editor/utils/calculate-nutritions";
 import React from "react";
-import { IngredientType } from "../shared/types/food-item-type";
-
-interface StateType extends Object {
-  ingredientList: {
-    [key: string]: IngredientType
-  },
-  nutritionList: {
-    [key: string]: any
-  },
-  foodProperties: {
-    uniqueFoodID: string,
-    foodName: string,
-    foodWeight: number,
-    foodUnit: string,
-    foodImage: string,
-    foodImageChanged: boolean
-  },
-  changed: boolean,
-  lisIsEmpty: boolean,
-  back: boolean,
-  refetch: {
-    reFetchID: string,
-    reFetchNewID: string,
-    needReFetch: boolean
-  }
-}
+import { IngredientStateType } from "../shared/types/context-types";
 
 interface ActionType {
   type: string,
   payload: any
 }
 
-const stateStack: Array<StateType> = [];
+const stateStack: Array<IngredientStateType> = [];
 
-const initialState: StateType = {
+const initialState: IngredientStateType = {
   ingredientList: {},
   nutritionList: {},
   foodProperties: {
@@ -56,9 +31,14 @@ const initialState: StateType = {
   }
 };
 
-const ingredientContext = createContext(null);
+interface ContextType{
+  state: IngredientStateType,
+  dispatch: React.Dispatch<any>
+}
 
-const addIngredientHandler = (state: StateType, action: ActionType) => {
+const ingredientContext = createContext<ContextType>({ state: initialState, dispatch: () => null });
+
+const addIngredientHandler = (state: IngredientStateType, action: ActionType) => {
   let tempState = { ...state };
   if (action.payload) {
     let isDuplicate = false;
@@ -84,7 +64,7 @@ const addIngredientHandler = (state: StateType, action: ActionType) => {
   return tempState;
 };
 
-const removeIngredientHandler = (state: StateType, action: ActionType) => {
+const removeIngredientHandler = (state: IngredientStateType, action: ActionType) => {
   let tempState = { ...state };
   delete tempState.nutritionList[action.payload];
   delete tempState.ingredientList[action.payload];
@@ -92,7 +72,7 @@ const removeIngredientHandler = (state: StateType, action: ActionType) => {
   return tempState;
 };
 
-const ingredientChangeHandler = (state: StateType, action: ActionType) => {
+const ingredientChangeHandler = (state: IngredientStateType, action: ActionType) => {
   let tempState = { ...state };
   tempState.ingredientList[action.payload.id][action.payload.type] = action.payload.value;
   let nutritions = CalculateNutritions(
@@ -104,19 +84,19 @@ const ingredientChangeHandler = (state: StateType, action: ActionType) => {
   return tempState;
 };
 
-const setUniqueFoodID = (state: StateType, action: ActionType) => {
+const setUniqueFoodID = (state: IngredientStateType, action: ActionType) => {
   let tempState = { ...state };
   tempState.foodProperties.uniqueFoodID = action.payload;
   return tempState;
 };
 
-const setChangedToFalse = (state: StateType) => {
+const setChangedToFalse = (state: IngredientStateType) => {
   const tempState = { ...state };
   tempState.changed = false;
   return tempState;
 };
 
-const popState = (state: StateType) => {
+const popState = (state: IngredientStateType) => {
   let tempState = stateStack.pop();
   if (tempState) {
     if (stateStack.length <= 0) {
@@ -132,7 +112,7 @@ const popState = (state: StateType) => {
   return state;
 };
 
-const updateItemData = (state: StateType, action: ActionType) => {
+const updateItemData = (state: IngredientStateType, action: ActionType) => {
   let tempState = { ...state };
   tempState.refetch.needReFetch = false;
   delete tempState.nutritionList[state.refetch.reFetchID as string];
@@ -156,7 +136,7 @@ const updateItemData = (state: StateType, action: ActionType) => {
   return tempState;
 };
 
-const pushState = (state: StateType, action: ActionType) : StateType => {
+const pushState = (state: IngredientStateType, action: ActionType) : IngredientStateType => {
   let tempState;
   if (action.payload.emptyPush) {
     if (!state.back) {
@@ -181,7 +161,7 @@ const pushState = (state: StateType, action: ActionType) : StateType => {
         }
       };
       stateStack.push({ ...emptyState })
-      tempState = { ...state } as StateType;
+      tempState = { ...state } as IngredientStateType;
       tempState.foodProperties.uniqueFoodID = action.payload.uniqueFoodID;
       tempState.back = true;
       return tempState;
@@ -211,7 +191,7 @@ const pushState = (state: StateType, action: ActionType) : StateType => {
   return state;
 };
 
-const changeFoodProperties = (state: StateType, action: ActionType) => {
+const changeFoodProperties = (state: IngredientStateType, action: ActionType) => {
   let tempState = { ...state };
   if (action.payload.foodName)
     tempState.foodProperties.foodName = action.payload.foodName;
@@ -227,7 +207,7 @@ const changeFoodProperties = (state: StateType, action: ActionType) => {
   return tempState;
 }
 
-const rootReducer = (state: StateType, action: ActionType) : StateType => {
+const rootReducer = (state: IngredientStateType, action: ActionType) : IngredientStateType => {
   switch (action.type) {
     case "addIngredient":
       return addIngredientHandler(state, action);
