@@ -19,7 +19,6 @@ const MealEditor = () => {
   const imageChangeHandler = (image)=>{
     setFoodImage(image);
     dispatch({type:"changeFoodProperties",payload:{foodImageChanged:true}});
-    console.log(state);
   }
 
   const uploadFoodImage = (foodID, foodName) => {

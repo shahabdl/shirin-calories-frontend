@@ -18,8 +18,6 @@ const DropdownList = ({ options, className = "", defaultValue = 0, renderTop = f
   };
 
   const itemClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-
-
     const parentItem = e.currentTarget.parentElement;
     for (let child in parentItem?.children) {
       let childElement = parentItem?.children[parseInt(child)];
@@ -39,7 +37,6 @@ const DropdownList = ({ options, className = "", defaultValue = 0, renderTop = f
     );
     let indexNumber = e.currentTarget.getAttribute("data-index");
     if (indexNumber !== null) {
-      console.log(indexNumber);
       setSelectedOption(parseInt(indexNumber));
     }
     setShowDropList(false);
@@ -73,11 +70,11 @@ const DropdownList = ({ options, className = "", defaultValue = 0, renderTop = f
     }
   }, [defaultValueVal])
 
-  useEffect(()=>{
-    if(defaultValue !== defaultValueVal){
+  useEffect(() => {
+    if (defaultValue !== defaultValueVal) {
       setDefaultValueVal(defaultValue);
     }
-  },[defaultValue])
+  }, [defaultValue])
 
   useEffect(() => {
     onSelect(options[selectedOption]);

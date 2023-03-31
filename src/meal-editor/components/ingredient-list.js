@@ -6,15 +6,12 @@ import IngredientItem from "./ingredient-item";
 import "./ingredient-list.css";
 import { fetchAuth } from "../../user/utils/fetch-auth";
 import SaveButtons from "./save-buttons";
-import { ConvertWithUnit } from "../utils/calculate-nutritions";
 
 const IngredientList = (props) => {
   const { state, dispatch } = useContext(ingredientContext);
   const [listChanged, setListChanged] = useState(false); // check if any changes happened in list to enable or disable save button
   const [isSaving, setIsSaving] = useState(false); // if its in saving buttons should change to loading icon
   const [listIsEmpty, setListIsEmpty] = useState(true); // if list is empty, save as button should be disabled
-
-
 
   const saveHandler = (option) => {
     setIsSaving(true);
@@ -31,13 +28,15 @@ const IngredientList = (props) => {
     }
 
     let listObject;
-    let foodWeight = ConvertWithUnit(state.foodProperties.foodUnit, state.foodProperties.foodWeight);
+    let totalWeight = state.foodProperties.foodWeight;
+    let foodUnit = state.foodProperties.foodUnit;
 
     listObject = {
       name: state.foodProperties.foodName,
       ingredients: [],
       foods: [],
-      totalWeight: foodWeight,
+      totalWeight,
+      foodUnit
     };
 
     //loop through foods to add them to request
@@ -68,12 +67,14 @@ const IngredientList = (props) => {
 
     //check to see if this is for creating new food or updating existing one
     let fetchUrl;
-    if (!option.saveAs) {
+    if (!option || !option.saveAs) {
       listObject.foodID = state.foodProperties.uniqueFoodID;
       fetchUrl = "update";
     } else {
       fetchUrl = "save";
     }
+
+    console.log(listObject);
 
     let listJson = JSON.stringify(listObject);
 

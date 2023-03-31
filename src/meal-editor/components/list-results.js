@@ -1,8 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ingredientContext } from "../../context/meal-context";
 import CircularGraph from "../../shared/components/ui/graph/circular-graph";
+import { ConvertWithUnit, roundToDec } from "../utils/calculate-nutritions";
 
-const ListResults = ({ foodProperties }) => {
+const ListResults = () => {
   const [result, setResult] = useState({});
 
   const { state } = useContext(ingredientContext);
@@ -85,6 +86,11 @@ const ListResults = ({ foodProperties }) => {
         nutrition = { ...objectSum(nutrition, state.nutritionList[item]) };
       }
       nutrition = { ...objectRound(nutrition) };
+      let weightInGrams = ConvertWithUnit(state.foodProperties.foodUnit, state.foodProperties.foodWeight);
+      nutrition.calories *= 100 / weightInGrams;
+      nutrition.macros.carbs.total *= (100 / weightInGrams);
+      nutrition.macros.fats.total *= (100 / weightInGrams);
+      nutrition.macros.proteins *= (100 / weightInGrams);
       setResult({
         ...nutrition
       });
@@ -106,13 +112,13 @@ const ListResults = ({ foodProperties }) => {
           id={"total-result"}
           middleValue={{
             legend: "Calories",
-            value: result.calories ? Math.round(result.calories * 100 / (state.foodProperties.foodWeight? state.foodProperties.foodWeight : 100)) : 0,
+            value: result.calories ? roundToDec(result.calories) : 0,
             icon: "calories"
           }}
           data={[
             {
               name: "Fat",
-              value: result.macros ? result.macros.fats.total * 100 / (state.foodProperties.foodWeight? state.foodProperties.foodWeight : 100) : 0,
+              value: result.macros ? roundToDec(result.macros.fats.total) : 0,
               color: "rgb(230,84,6)",
               icon: "fats",
               strokeWidth: "5",
@@ -120,7 +126,7 @@ const ListResults = ({ foodProperties }) => {
             },
             {
               name: "Proteins",
-              value: result.macros ? result.macros.proteins * 100 / (state.foodProperties.foodWeight? state.foodProperties.foodWeight : 100) : 0,
+              value: result.macros ? roundToDec(result.macros.proteins) : 0,
               color: "rgb(255,165,0)",
               icon: "proteins",
               strokeWidth: "5",
@@ -128,7 +134,7 @@ const ListResults = ({ foodProperties }) => {
             },
             {
               name: "Carbs",
-              value: result.macros ? result.macros.carbs.total * 100 / (state.foodProperties.foodWeight? state.foodProperties.foodWeight : 100) : 0,
+              value: result.macros ? roundToDec(result.macros.carbs.total) : 0 ,
               color: "rgb(5,125,240)",
               icon: "carbs",
               strokeWidth: "5",

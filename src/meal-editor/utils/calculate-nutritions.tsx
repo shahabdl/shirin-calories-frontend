@@ -54,4 +54,4 @@ const roundToDec = (num: number) => {
     return Math.round((num + Number.EPSILON) * 100) / 100;
 }
 
-export { CalculateNutritions, ConvertWithUnit };
+export { CalculateNutritions, ConvertWithUnit, roundToDec };

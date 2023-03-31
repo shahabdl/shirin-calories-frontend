@@ -21,9 +21,7 @@ const ImageUpload = ({ onImageChange }: Props) => {
 
     const openDialogueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.currentTarget.files) {
-            let file = e.currentTarget.files[0];
-            console.log(file);
-            
+            let file = e.currentTarget.files[0];            
             setImageFile(file);
             let imageUrl = URL.createObjectURL(file);
             setFileName(imageUrl)
