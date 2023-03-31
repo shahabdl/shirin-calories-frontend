@@ -192,7 +192,7 @@ const IngredientList = (props) => {
               });
             });
         }
-        dispatch({ type: "changeFoodProperties", payload: { foodName: jsonRes.food.name, foodWeight: jsonRes.food.totalWeight } })
+        dispatch({ type: "pushState", payload: { uniqueFoodID: jsonRes.food._id, foodName: jsonRes.food.name, foodWeight: jsonRes.food.totalWeight, foodUnit: jsonRes.food.foodUnit } });
       });
   };
 

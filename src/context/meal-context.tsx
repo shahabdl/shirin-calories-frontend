@@ -31,7 +31,7 @@ const initialState: IngredientStateType = {
   }
 };
 
-interface ContextType{
+interface ContextType {
   state: IngredientStateType,
   dispatch: React.Dispatch<any>
 }
@@ -136,8 +136,8 @@ const updateItemData = (state: IngredientStateType, action: ActionType) => {
   return tempState;
 };
 
-const pushState = (state: IngredientStateType, action: ActionType) : IngredientStateType => {
-  let tempState;
+const pushState = (state: IngredientStateType, action: ActionType): IngredientStateType => {
+  let tempState: IngredientStateType;
   if (action.payload.emptyPush) {
     if (!state.back) {
       let emptyState = {
@@ -176,7 +176,11 @@ const pushState = (state: IngredientStateType, action: ActionType) : IngredientS
       nutritionList: {},
       foodProperties: {
         uniqueFoodID: action.payload.uniqueFoodID,
-        foodName: "",
+        foodName: action.payload.foodName,
+        foodWeight: action.payload.foodWeight,
+        foodUnit: action.payload.foodUnit,
+        foodImage: "",
+        foodImageChanged: false
       },
       changed: false,
       lisIsEmpty: false,
@@ -187,8 +191,8 @@ const pushState = (state: IngredientStateType, action: ActionType) : IngredientS
         needReFetch: false
       }
     };
+    return tempState
   }
-  return state;
 };
 
 const changeFoodProperties = (state: IngredientStateType, action: ActionType) => {
@@ -207,7 +211,7 @@ const changeFoodProperties = (state: IngredientStateType, action: ActionType) =>
   return tempState;
 }
 
-const rootReducer = (state: IngredientStateType, action: ActionType) : IngredientStateType => {
+const rootReducer = (state: IngredientStateType, action: ActionType): IngredientStateType => {
   switch (action.type) {
     case "addIngredient":
       return addIngredientHandler(state, action);
@@ -237,8 +241,8 @@ interface PropsType {
 }
 const IngredientProvider = ({ children, testValue }: PropsType) => {
   const [state, dispatch] = useReducer(rootReducer, initialState);
-  // console.log('stack',stateStack);
-  console.log('state', state);
+  // console.log('stack', stateStack);
+  // console.log('state', state);
   return (
     <ingredientContext.Provider value={testValue ? { ...testValue } : { state, dispatch }}>
       {children}

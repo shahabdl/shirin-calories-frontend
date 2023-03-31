@@ -11,12 +11,15 @@ interface Props {
 const DropdownList = ({ options, className = "", defaultValue = 0, renderTop = false, onSelect }: Props) => {
   const [selectedOption, setSelectedOption] = useState<number>(typeof defaultValue === "number" ? defaultValue : 0);
   const [showDropList, setShowDropList] = useState(false);
+  const [defaultValueVal, setDefaultValueVal] = useState<string | number>(defaultValue)
 
   const toggleDropList = () => {
     setShowDropList(!showDropList);
   };
 
   const itemClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+
+
     const parentItem = e.currentTarget.parentElement;
     for (let child in parentItem?.children) {
       let childElement = parentItem?.children[parseInt(child)];
@@ -68,7 +71,13 @@ const DropdownList = ({ options, className = "", defaultValue = 0, renderTop = f
     else {
       onSelect(options[selectedOption]);
     }
-  }, [defaultValue])
+  }, [defaultValueVal])
+
+  useEffect(()=>{
+    if(defaultValue !== defaultValueVal){
+      setDefaultValueVal(defaultValue);
+    }
+  },[defaultValue])
 
   useEffect(() => {
     onSelect(options[selectedOption]);

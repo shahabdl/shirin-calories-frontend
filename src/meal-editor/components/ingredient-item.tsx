@@ -46,9 +46,7 @@ const IngredientItem = (props: PropsType) => {
   };
 
   const editItemHandler = () => {
-    dispatch({ type: "pushState", payload: { uniqueFoodID: props.item.item._id, foodName: props.item.item.name } });
     props.fetchFood(props.item.item._id);
-
   }
 
   useEffect(() => {
