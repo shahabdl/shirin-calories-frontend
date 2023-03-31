@@ -1,6 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { userContext } from "../../context/user-context";
 import { fetchAuth } from "../utils/fetch-auth";
+
+interface AuthonticationFetchResultType {
+  avatar: {
+    image: string,
+    type: string
+  },
+  email: string,
+  token: string,
+  userID: string,
+  userName: string
+}
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,14 +19,14 @@ const Login = () => {
   const { dispatch } = useContext(userContext);
   const [error, setError] = useState("");
 
-  const handleLogin = (authRes) => {
+  const handleLogin = (authRes: AuthonticationFetchResultType) => {
+    console.log(authRes);
     //if loggin failed we have to remove access token.
     if (!authRes) {
       dispatch({ type: "logOutUser", payload: "" });
       return;
     }
     //putting user data in context
-    console.log(authRes);
     dispatch({
       type: "setUser",
       payload: {
@@ -23,12 +34,12 @@ const Login = () => {
         email: authRes.email,
         userAccessToken: authRes.token,
         userName: authRes.userName,
-        userAvatar:{image:authRes.avatar.image, type:authRes.avatar.type}
+        userAvatar: { image: authRes.avatar.image, type: authRes.avatar.type }
       },
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     fetchAuth({
@@ -57,7 +68,7 @@ const Login = () => {
       })
   };
 
-  const changeHandler = (e) => {
+  const changeHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.type === "email") {
       setEmail(e.target.value);
     } else if (e.target.type === "password") {
@@ -65,13 +76,13 @@ const Login = () => {
     }
   };
 
-  useEffect(()=>{
-    if(error !== ""){
-      setTimeout(()=>{
+  useEffect(() => {
+    if (error !== "") {
+      setTimeout(() => {
         setError("");
-      },2000)
+      }, 2000)
     }
-  },[error])
+  }, [error])
 
   return (
     <div className="w-[100%] h-[100%] grid items-center justify-center">
@@ -82,7 +93,7 @@ const Login = () => {
         <h1 className="border-b-2 pb-4 border-border dark:border-border-dark">
           Login
         </h1>
-        {error? <h2>{error}</h2> : ""}
+        {error ? <h2>{error}</h2> : ""}
         <input
           type="email"
           placeholder="Email"

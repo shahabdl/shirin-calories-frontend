@@ -6,10 +6,20 @@ import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
 } from "../../shared/utils/validators";
-import { fetchAuth } from "../utils/fetch-auth";
 
+interface StateType {
+  inputs: { [key: string]: Record<string, any> },
+  isValid: boolean | null,
+}
 
-const formReducer = (state, action) => {
+interface actionType {
+  type: string,
+  inputId: string,
+  isValid: boolean,
+  value: number
+}
+
+const formReducer = (state: StateType, action: actionType) => {
   switch (action.type) {
     case "INPUT_CHANGE":
       let formIsValid = true;
@@ -33,28 +43,31 @@ const formReducer = (state, action) => {
   }
 };
 
-const Signup = (props) => {
-  const [formState, dispatch] = useReducer(formReducer, {
-    inputs: {
-      user: {
-        value: "",
-        isValid: false,
-      },
-      email: {
-        value: "",
-        isValid: false,
-      },
-      password: {
-        value: "",
-        isValid: false,
-      },
+const initialState: StateType = {
+  inputs: {
+    user: {
+      value: "",
+      isValid: false,
     },
-    isValid: false,
-  });
-  const signUpHandler = (e) => {
-    props.signUpHandler(e, formState);
+    email: {
+      value: "",
+      isValid: false,
+    },
+    password: {
+      value: "",
+      isValid: false,
+    },
+  },
+  isValid: false,
+}
+
+const Signup = ({ signUpHandler }: { signUpHandler: Function }) => {
+  const [formState, dispatch] = useReducer(formReducer, initialState);
+  const signUpSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    signUpHandler(e, formState);
   }
-  const inputHandler = useCallback((id, value, isValid) => {
+
+  const inputHandler = useCallback((id: string, value: number, isValid: boolean) => {
     dispatch({
       type: "INPUT_CHANGE",
       value: value,
@@ -68,7 +81,7 @@ const Signup = (props) => {
 
       <form
         className="bg-primary dark:bg-primary-dark grid gap-5 p-5 rounded-lg shadow-lg dark:shadow-none border-[1px] border-border dark:border-border-dark"
-        onSubmit={signUpHandler}>
+        onSubmit={signUpSubmit}>
         <h1 className="border-b-2 pb-4 border-border dark:border-border-dark">
           Sign up
         </h1>

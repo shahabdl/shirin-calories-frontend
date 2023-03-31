@@ -11,7 +11,25 @@ interface State {
 interface Action {
   type: string,
   val: string,
-  validators: Array<{ type: string, val: number }>
+  validators: Array<{ type: string, val?: number }>
+}
+
+interface Props {
+  id: string,
+  onInput: Function,
+  validators: Array<{ type: string, val?: number }>,
+  element: string,
+  type: string,
+  rows?: number,
+  placeholder: string,
+  errorText: string,
+  className: string
+}
+
+const inputStateInitialise: State = {
+  value: "",
+  isTouched: false,
+  isValid: false,
 }
 
 const inputReducer = (state: State, action: Action) => {
@@ -19,8 +37,8 @@ const inputReducer = (state: State, action: Action) => {
     case "CHANGE":
       return {
         ...state,
-        value: action.val,
-        isValid: validate(action.val, action.validators),
+        value: action.val ? action.val : "",
+        isValid: validate(action.val , action.validators),
       };
     case "BLUR": {
       return {
@@ -33,24 +51,8 @@ const inputReducer = (state: State, action: Action) => {
   }
 };
 
-interface Props {
-  id: string,
-  onInput: Function,
-  validators: Array<{ type: string, val: number }>,
-  element: string,
-  type: string,
-  rows: number,
-  placeholder: string,
-  errorText: string,
-  className: string
-}
-
 const Input = (props: Props) => {
-  const [inputState, dispatch] = useReducer(inputReducer, {
-    value: "",
-    isTouched: false,
-    isValid: false,
-  });
+  const [inputState, dispatch] = useReducer(inputReducer, inputStateInitialise);
 
   const { id, onInput } = props;
   const { value, isValid } = inputState;
@@ -70,8 +72,8 @@ const Input = (props: Props) => {
   const blurHandler = () => {
     dispatch({
       type: "BLUR",
-      val:"",
-      validators:[]
+      val: "",
+      validators: []
     });
   };
 
