@@ -1,9 +1,14 @@
-import React, { useContext, useEffect } from "react";
+import React, { ReactElement, useContext, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { fetchAuth } from "../../user/utils/fetch-auth";
 import { userContext } from "../../context/user-context";
 
-const ProtectedRoute = ({ children, redirect }) => {
+interface PropsType{
+  children: ReactElement,
+  redirect: boolean
+}
+
+const ProtectedRoute = ({ children, redirect }:PropsType) => {
   const { userState, dispatch } = useContext(userContext);
 
   useEffect(() => {
@@ -50,7 +55,6 @@ const ProtectedRoute = ({ children, redirect }) => {
         "/user/login" +
         (redirect ? "?redirectTo=" + window.location.pathname : "")
       }
-      replace
     />
   );
 };
