@@ -2,7 +2,7 @@ import React from "react";
 import { itemType } from "../../shared/types/food-item-type";
 
 interface PropsType {
-  clickHandler: (item: itemType) => null,
+  clickHandler: (item: itemType) => void,
   ingredParams: itemType
 }
 

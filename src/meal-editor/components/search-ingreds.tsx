@@ -4,22 +4,29 @@ import React, {
   useRef,
   useContext,
   useCallback,
+  ChangeEvent,
 } from "react";
 import { fetchAuth } from "../../user/utils/fetch-auth";
 import SearchItem from "./search-item";
 import { ingredientContext } from "../../context/meal-context";
 import "./search-ingreds.css";
 import SvgIcon from "../../shared/components/ui/icons";
+import { IngredientType, itemType } from "../../shared/types/food-item-type";
 
-const SearchIngred = (props) => {
+interface PropsType {
+  changeSearchVisibility: (visibility: boolean) => void,
+
+}
+
+const SearchIngred = (props: PropsType) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [foundResults, setFoundResults] = useState(false);
-  const [searchResult, setSearchResult] = useState([]);
-  const [userFoodsResult, setUserFoodsResult] = useState([]);
+  const [searchResult, setSearchResult] = useState<any>([]);
+  const [userFoodsResult, setUserFoodsResult] = useState<Array<IngredientType>>([]);
   const [loadingData, setLoadingData] = useState(false);
   const [searchedYet, setSearchedYet] = useState(false);
 
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   const { dispatch } = useContext(ingredientContext);
 
@@ -27,8 +34,8 @@ const SearchIngred = (props) => {
     props.changeSearchVisibility(false);
   };
 
-  let filterTimeout;
-  const changeHandler = (e) => {
+  let filterTimeout: ReturnType<typeof setTimeout>;
+  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     clearTimeout(filterTimeout);
     if (!e.target.value) {
       setSearchResult([]);
@@ -44,7 +51,8 @@ const SearchIngred = (props) => {
     }, 500);
   };
 
-  const addItemHandler = (item) => {
+  //// THIS ONE 
+  const addItemHandler = (item: itemType): void => {
     dispatch({ type: "addIngredient", payload: { item } });
     props.changeSearchVisibility(false);
   };
@@ -119,9 +127,9 @@ const SearchIngred = (props) => {
               return res.json();
             }
           })
-          .then((foods) => {
+          .then(foods => {
             if (foods) {
-              if (foods["ingredients"].length > 0 || foods["usersFoods"].length > 0) {
+              if (foods["ingredients"].length > 0 || foods["usersFoods"].length > 0) {                
                 setSearchResult([...foods["ingredients"]]);
                 setUserFoodsResult([...foods["usersFoods"]]);
                 setFoundResults(true);
@@ -149,18 +157,20 @@ const SearchIngred = (props) => {
 
   //check to see if user clicked outside of search window to close it
   useEffect(() => {
-    let searchBox = document.getElementById("searchBox");
+    let searchBox = document.getElementById("searchBox") as HTMLInputElement;
     if (searchBox) {
       searchBox.focus();
       searchBox.value = "";
     }
 
-    const checkIfClickedOutside = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        props.changeSearchVisibility(false);
-      }
-      if (ref.current === e.target) {
-        props.changeSearchVisibility(false);
+    const checkIfClickedOutside = (e: MouseEvent) => {
+      if (e.target) {
+        if (ref.current && !ref.current.contains(e.target as Node)) {
+          props.changeSearchVisibility(false);
+        }
+        if (ref.current === e.target) {
+          props.changeSearchVisibility(false);
+        }
       }
     };
 
@@ -212,7 +222,7 @@ const SearchIngred = (props) => {
                 App Foods
               </h2>
               {loadingData ? <>{createPlaceHolder()}</> : ""}
-              {searchResult.map((res, i) => {
+              {searchResult.map((res: any, i: number) => {
                 return (
                   <SearchItem
                     ingredParams={res}
@@ -227,7 +237,7 @@ const SearchIngred = (props) => {
                 Users Foods
               </h2>
               {loadingData ? <>{createPlaceHolder()}</> : ""}
-              {userFoodsResult.map((res, i) => {
+              {userFoodsResult.map((res: any, i: number) => {
                 return (
                   <SearchItem
                     ingredParams={res}

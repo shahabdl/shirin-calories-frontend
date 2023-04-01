@@ -111,6 +111,7 @@ const ListResults = () => {
         nutrition = { ...objectSum(nutrition, state.nutritionList[item]) } as NutritionType;
       }
       nutrition = { ...objectRound(nutrition) } as NutritionType;
+
       let weightInGrams = ConvertWithUnit(state.foodProperties.foodUnit, state.foodProperties.foodWeight);
       if (typeof nutrition.calories === "number")
         nutrition.calories *= 100 / weightInGrams;
@@ -123,10 +124,12 @@ const ListResults = () => {
 
       if (typeof nutrition.macros.proteins === "number")
         nutrition.macros.proteins *= (100 / weightInGrams);
+
       setResult({
         ...nutrition
       });
     };
+
     calculateResult();
   }, [state]);
 

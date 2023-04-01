@@ -2,6 +2,7 @@ import { createContext, ReactNode, useReducer } from "react";
 import { CalculateNutritions } from "../meal-editor/utils/calculate-nutritions";
 import React from "react";
 import { IngredientStateType } from "../shared/types/context-types";
+import { IngredientType } from "../shared/types/food-item-type";
 
 interface ActionType {
   type: string,
@@ -73,8 +74,20 @@ const removeIngredientHandler = (state: IngredientStateType, action: ActionType)
 };
 
 const ingredientChangeHandler = (state: IngredientStateType, action: ActionType) => {
-  let tempState = { ...state };
-  tempState.ingredientList[action.payload.id][action.payload.type] = action.payload.value;
+  let tempState = { ...state };  
+  switch (action.payload.type) {
+    case "unit":
+      tempState.ingredientList[action.payload.id]["unit"] = action.payload.value;
+      break;
+    case "weight":
+      tempState.ingredientList[action.payload.id]["weight"] = action.payload.value;
+      break;
+    case "types":
+      tempState.ingredientList[action.payload.id]["types"] = action.payload.value;
+      break;
+    default:
+      break;
+  }
   let nutritions = CalculateNutritions(
     tempState.ingredientList[action.payload.id]
   );

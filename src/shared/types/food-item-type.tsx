@@ -1,5 +1,4 @@
 export interface IngredientType {
-    [key: string]: string | number | itemType,
     id: string,
     weight: number,
     unit: string,
