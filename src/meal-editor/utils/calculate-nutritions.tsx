@@ -19,10 +19,10 @@ const CalculateNutritions = (ingredient: IngredientType) => {
                     foodConverterResult = { ...foodConverter<Record<string, any>>(obj) };
                 } else if (typeof obj === "number") {
                     foodConverterResult = foodConverter<number>(obj);
-                }else{
+                } else {
                     return;
                 }
-                newItem[nutrition] = foodConverterResult ;
+                newItem[nutrition] = foodConverterResult;
             }
             return { ...newItem };
         }
@@ -50,8 +50,8 @@ const ConvertWithUnit = (unit: string, value: number) => {
     return convertedValue;
 }
 
-const roundToDec = (num: number) => {
-    return Math.round((num + Number.EPSILON) * 100) / 100;
+const roundToDec = (num: number, decimal: number = 2) => {
+    return Math.round((num + Number.EPSILON) * Math.pow(10, decimal)) / Math.pow(10, decimal);
 }
 
 export { CalculateNutritions, ConvertWithUnit, roundToDec };

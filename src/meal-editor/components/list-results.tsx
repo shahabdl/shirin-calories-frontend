@@ -2,50 +2,74 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ingredientContext } from "../../context/meal-context";
 import CircularGraph from "../../shared/components/ui/graph/circular-graph";
 import { ConvertWithUnit, roundToDec } from "../utils/calculate-nutritions";
+import { NutritionType } from "../../shared/types/food-item-type";
 
 const ListResults = () => {
-  const [result, setResult] = useState({});
+  const [result, setResult] = useState<NutritionType>({} as NutritionType);
 
   const { state } = useContext(ingredientContext);
 
-  const objectSum = useCallback((a, b) => {
-    let result = {};
-    for (let item in a) {
-      if (typeof (a[item]) !== "object") {
-
-        if (isNaN(a[item]) && !isNaN(b[item])) {
-          result[item] = b[item];
-        } else if (!isNaN(a[item]) && isNaN(b[item])) {
-          result[item] = a[item];
+  const objectSum = useCallback((a: (object | number | string), b: (object | number | string)): object => {
+    if (typeof a === "object") {
+      let result: Record<string, object | number | string> = {};
+      let tempObj: object = {};
+      for (let item in a) {
+        if (typeof b === "object") {
+          tempObj = objectSum(a[item as keyof typeof a], b[item as keyof typeof b])
         } else {
-          result[item] = a[item] + b[item];
+          tempObj = objectSum(a[item as keyof typeof a], b)
         }
-      } else if (typeof (a[item]) === "object") {
-        result[item] = objectSum(a[item], b[item]);
+        if (Object.keys(tempObj).includes("num")) {
+          result[item] = tempObj["num" as keyof typeof tempObj];
+        } else {
+          result[item] = { ...tempObj };
+        }
+      }
+      return result;
+    } else {
+      if (typeof b !== "object") {
+        const aAsNumber = Number(a);
+        const bAsNumber = Number(b);
+        if (isNaN(aAsNumber) && !isNaN(bAsNumber)) {
+          return { num: bAsNumber };
+        } else if (!isNaN(aAsNumber) && isNaN(bAsNumber)) {
+          return { num: aAsNumber };
+        } else if (isNaN(aAsNumber) && isNaN(bAsNumber)) {
+          return { num: "-" };
+        } else {
+          return { num: aAsNumber + bAsNumber };
+        }
+      } else {
+        return { num: "-" };
       }
     }
-    return (result)
   }, [])
 
-  const objectRound = useCallback((inputObject) => {
-    let result = {};
-    for (let item in inputObject) {
-      if (typeof (inputObject[item]) !== "object") {
-        if (isNaN(inputObject[item])) {
-          result[item] = "-";
+  const objectRound = useCallback((input: (object | number | string), decimal: number = 2): object => {
+    if (typeof input === "object") {
+      let result: Record<string, (object | number | string)> = {};
+      let tempObj: object = {};
+      for (let item in input) {
+        tempObj = objectRound(input[item as keyof typeof input], decimal);
+        if (Object.keys(tempObj).includes("num")) {
+          result[item] = tempObj["num" as keyof typeof tempObj];
         } else {
-          result[item] = Math.round((inputObject[item] + Number.EPSILON) * 100) / 100;
+          result[item] = { ...tempObj }
         }
-      } else if (typeof (inputObject[item]) === "object") {
-        result[item] = objectRound(inputObject[item]);
+      }
+      return result;
+    } else {
+      if (isNaN(Number(input))) {
+        return { num: "-" };
+      } else {
+        return { num: roundToDec(Number(input), decimal) };
       }
     }
-    return result;
   }, [])
 
   useEffect(() => {
     const calculateResult = () => {
-      let nutrition =
+      let nutrition: NutritionType =
       {
         calories: "-",
         macros: {
@@ -76,6 +100,7 @@ const ListResults = () => {
           k: "-",
           b1: "-",
           b2: "-",
+          b3: "-",
           b5: "-",
           b6: "-",
           b12: "-"
@@ -83,14 +108,21 @@ const ListResults = () => {
       }
 
       for (const item in state.nutritionList) {
-        nutrition = { ...objectSum(nutrition, state.nutritionList[item]) };
+        nutrition = { ...objectSum(nutrition, state.nutritionList[item]) } as NutritionType;
       }
-      nutrition = { ...objectRound(nutrition) };
+      nutrition = { ...objectRound(nutrition) } as NutritionType;
       let weightInGrams = ConvertWithUnit(state.foodProperties.foodUnit, state.foodProperties.foodWeight);
-      nutrition.calories *= 100 / weightInGrams;
-      nutrition.macros.carbs.total *= (100 / weightInGrams);
-      nutrition.macros.fats.total *= (100 / weightInGrams);
-      nutrition.macros.proteins *= (100 / weightInGrams);
+      if (typeof nutrition.calories === "number")
+        nutrition.calories *= 100 / weightInGrams;
+
+      if (typeof nutrition.macros.carbs.total === "number")
+        nutrition.macros.carbs.total *= (100 / weightInGrams);
+
+      if (typeof nutrition.macros.fats.total === "number")
+        nutrition.macros.fats.total *= (100 / weightInGrams);
+
+      if (typeof nutrition.macros.proteins === "number")
+        nutrition.macros.proteins *= (100 / weightInGrams);
       setResult({
         ...nutrition
       });
@@ -112,13 +144,13 @@ const ListResults = () => {
           id={"total-result"}
           middleValue={{
             legend: "Calories",
-            value: result.calories ? roundToDec(result.calories) : 0,
+            value: result.calories ? Number(result.calories) : 0,
             icon: "calories"
           }}
           data={[
             {
               name: "Fat",
-              value: result.macros ? roundToDec(result.macros.fats.total) : 0,
+              value: result.macros ? Number(result.macros.fats.total) : 0,
               color: "rgb(230,84,6)",
               icon: "fats",
               strokeWidth: "5",
@@ -126,7 +158,7 @@ const ListResults = () => {
             },
             {
               name: "Proteins",
-              value: result.macros ? roundToDec(result.macros.proteins) : 0,
+              value: result.macros ? Number(result.macros.proteins) : 0,
               color: "rgb(255,165,0)",
               icon: "proteins",
               strokeWidth: "5",
@@ -134,7 +166,7 @@ const ListResults = () => {
             },
             {
               name: "Carbs",
-              value: result.macros ? roundToDec(result.macros.carbs.total) : 0 ,
+              value: result.macros ? Number(result.macros.carbs.total) : 0,
               color: "rgb(5,125,240)",
               icon: "carbs",
               strokeWidth: "5",

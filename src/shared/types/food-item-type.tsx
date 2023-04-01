@@ -16,39 +16,39 @@ export interface itemType {
 }
 
 export interface NutritionType {
-    [key: string] : any,
-    calories: number,
+    [key: string]: any,
+    calories: number | string,
     macros: {
         carbs: {
-            total: number,
-            fiber: number,
-            sugar: number
+            total: number | string,
+            fiber: number | string,
+            sugar: number | string
         },
         fats: {
-            total: number,
-            saturated: number,
-            cholesterol: number
+            total: number | string,
+            saturated: number | string,
+            cholesterol: number | string
         },
-        proteins: number
+        proteins: number | string
     },
     micros: {
-        iron: number,
-        calcium: number,
-        potassium: number,
-        sodium: number,
-        omega3: number
+        iron: number | string,
+        calcium: number | string,
+        potassium: number | string,
+        sodium: number | string,
+        omega3: number | string
     }
     vitamins: {
-        a: number,
-        c: number,
-        b6: number,
-        b1: number,
-        b12: number,
-        b2: number,
-        b3: number,
-        b5: number,
-        d: number,
-        e: number,
-        k: number
+        a: number | string,
+        c: number | string,
+        b6: number | string,
+        b1: number | string,
+        b12: number | string,
+        b2: number | string,
+        b3: number | string,
+        b5: number | string,
+        d: number | string,
+        e: number | string,
+        k: number | string
     }
 }

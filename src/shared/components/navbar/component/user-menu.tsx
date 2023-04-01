@@ -41,7 +41,7 @@ const UserMenu = () => {
                 dispatch({ type: "logOutUser", payload: "" });
             }
         } else {
-            fetchAuth({ method: "get", url: "/user"})
+            fetchAuth({ method: "get", url: "/user" })
                 .then((res) => {
                     if (!res.ok) {
                         dispatch({ type: "logOutUser", payload: "" });
@@ -137,7 +137,7 @@ const UserMenu = () => {
             </DropdownMenu>
         )
     }
-    return;
+    return (<></>);
 }
 
 export default UserMenu;
