@@ -4,7 +4,7 @@ interface OptionsType {
 
 const defaultOptions = { useToken: true, json: true, formData: "" };
 
-const addDefaultOptions = (options: OptionsType) => {
+const addDefaultOptions = (options?: OptionsType) => {
   let newOptions: OptionsType = { ...options };
   if (!options) return defaultOptions;
   for (let key in defaultOptions) {
@@ -18,8 +18,8 @@ const addDefaultOptions = (options: OptionsType) => {
 interface ConfigType {
   method: string,
   url: string,
-  options: OptionsType,
-  body: string
+  options?: OptionsType,
+  body?: string
 }
 
 const fetchAuth = async (config: ConfigType) => {

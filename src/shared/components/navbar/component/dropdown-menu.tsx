@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import React from "react";
 
 interface Props {
-  onChange: Function,
+  onChange: (status: boolean) => void,
   className: string,
   ID: string,
   buttonClass: string,
@@ -65,7 +65,6 @@ const DropdownMenu = (props: Props) => {
                 className="first:pt-0"
                 key={props.ID + index}
                 id={props.ID + "-" + index}
-              //onClick={()=>{setShowMenu(!showMenu);}}
               >
                 {navlink}
               </li>

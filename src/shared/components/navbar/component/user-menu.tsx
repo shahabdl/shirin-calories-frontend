@@ -7,23 +7,20 @@ import ToggleButton from "../../ui/toggle-button";
 import SvgIcon from "../../ui/icons";
 import { Link } from "react-router-dom";
 
-const UserMenu = (props) => {
+const UserMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { userState, dispatch } = useContext(userContext)
     const [showMenu, setShowMenu] = useState(true);
 
-    const onMenuOpened = (status) => {
+    const onMenuOpened = (status: boolean) => {
         setIsOpen(status);
     }
 
-    const changeDarkMode = (status) => {
+    const changeDarkMode = (status: boolean) => {
         let mode;
         switch (status) {
             case false:
                 mode = "dark"
-                break;
-            case true:
-                mode = "";
                 break;
             default:
                 mode = "";
@@ -44,7 +41,7 @@ const UserMenu = (props) => {
                 dispatch({ type: "logOutUser", payload: "" });
             }
         } else {
-            fetchAuth({ method: "get", url: "/user" })
+            fetchAuth({ method: "get", url: "/user"})
                 .then((res) => {
                     if (!res.ok) {
                         dispatch({ type: "logOutUser", payload: "" });
@@ -83,14 +80,14 @@ const UserMenu = (props) => {
         }
         let avatarDom = document.getElementById("user-avatar");
         if (avatarDom) {
-            avatarDom.innerHTML = userState.userAvatar.image;
+            avatarDom.innerHTML = String(userState.userAvatar.image);
         }
     }, [userState])
 
     useEffect(() => {
         let avatarDom = document.getElementById("user-avatar");
         if (avatarDom) {
-            avatarDom.innerHTML = userState.userAvatar.image;
+            avatarDom.innerHTML = String(userState.userAvatar.image);
         }
     }, [showMenu]);
 
