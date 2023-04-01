@@ -7,7 +7,7 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../../shared/utils/validators";
 
-interface StateType {
+export interface FormInputState {
   inputs: { [key: string]: Record<string, any> },
   isValid: boolean | null,
 }
@@ -19,7 +19,7 @@ interface actionType {
   value: number
 }
 
-const formReducer = (state: StateType, action: actionType) => {
+const formReducer = (state: FormInputState, action: actionType) => {
   switch (action.type) {
     case "INPUT_CHANGE":
       let formIsValid = true;
@@ -43,7 +43,7 @@ const formReducer = (state: StateType, action: actionType) => {
   }
 };
 
-const initialState: StateType = {
+const initialState: FormInputState = {
   inputs: {
     user: {
       value: "",

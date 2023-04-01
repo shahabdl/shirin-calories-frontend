@@ -1,19 +1,20 @@
 import { useEffect, useContext } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from "react-router-dom";
-import { fetchAuth } from "../../user/utils/fetch-auth";
+import { fetchAuth } from "../utils/fetch-auth";
 import { userContext } from "../../context/user-context";
 import Signup from "../components/signup";
 import Login from "../components/login";
-
+import { FormInputState } from "../components/signup";
 const User = () => {
   const { userState, dispatch } = useContext(userContext);
 
-  const signUpHandler = (e, formState)=>{
+  const signUpHandler = (e: React.FormEvent<HTMLFormElement>, formState: FormInputState) => {
     e.preventDefault();
     if (formState.isValid) {
       console.log(formState);
@@ -38,10 +39,10 @@ const User = () => {
       })
         .then(res => { if (res) return res.json() })
         .then(jsonRes => {
-          let {userID, email, userName, token, avatar} = jsonRes;
-          dispatch({type:"setUser", payload:{userID, email, userName, userAccessToken:token, userAvatar:avatar}});
+          let { userID, email, userName, token, avatar } = jsonRes;
+          dispatch({ type: "setUser", payload: { userID, email, userName, userAccessToken: token, userAvatar: avatar } });
         })
-        .catch(error=>{
+        .catch(error => {
           console.log(error);
         })
     }
@@ -49,7 +50,7 @@ const User = () => {
 
   useEffect(() => {
     //check token authontication
-    fetchAuth({ method: "get", url: "/user" })
+    fetchAuth({ method: "get", url: "/user", options: {}, body: "" })
       .then((res) => {
         if (!res.ok) {
           dispatch({ type: "logOutUser", payload: "" });
@@ -85,7 +86,7 @@ const User = () => {
     return <Redirect to={redirectUrl} />;
   }
 
-  return <Redirect to="/" replace />;
+  return <Redirect to="/" />;
 };
 
 export default User;
